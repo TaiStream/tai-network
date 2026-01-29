@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tai Network - Decentralized Video Infrastructure.">
+    <title>Tai Network | The Future of Video</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Three.js for 3D Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body class="dark-theme">
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/Tai_logo.png" alt="Tai Logo" class="logo-img">
+                <span class="logo-text">Tai<span class="highlight">Network</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#ecosystem">Apps</a>
+                <a href="demo.html">Live Demo</a>
+                <a href="download.html">Download</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://github.com/tai-network" class="btn btn-ghost">GitHub</a>
+                <a href="demo.html" class="btn btn-primary glow">Launch App</a>
+            </div>
+            <button class="menu-toggle">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero full-height">
+        <div class="hero-content fade-in-up">
+            <div class="badge-capsule">
+                <span class="dot"></span>
+                <span>v1.0 Public Beta Live</span>
+            </div>
+            <h1 class="hero-title">
+                Video Infrastructure<br>
+                <span class="gradient-text">Without Boundaries</span>
+            </h1>
+            <p class="hero-desc">
+                The first decentralized CDN optimized for streaming.
+                Built on <strong>Walrus</strong>. Powered by <strong>Sui</strong>.
+            </p>
+            <div class="hero-btns">
+                <a href="demo.html" class="btn btn-primary btn-xl glow">
+                    <span>Try the Demo</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="download.html" class="btn btn-secondary btn-xl">
+                    <span>Run a Node</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="tech-stack-row">
+                <span>Powered by</span>
+                <img src="assets/3_icon_walrus_color_RGB.svg" alt="Walrus" class="tech-logo">
+                <img src="assets/Logo_Sui_Droplet_Black.svg" alt="Sui" class="tech-logo invert-on-dark">
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Features Grid -->
+    <section id="features" class="section padding-xl">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="title-lg">Why Tai Network?</h2>
+                <p class="subtitle">Decentralization meets Performance</p>
+            </div>
+
+            <div class="bento-grid">
+                <div class="bento-card glass card-hover-effect">
+                    <div class="card-icon">⚡</div>
+                    <h3>Global Edge Caching</h3>
+                    <p>Tai Nodes cache your content worldwide. HTTP Range requests ensure instant seeking and zero
+                        buffering.</p>
+                </div>
+                <div class="bento-card glass card-hover-effect">
+                    <div class="card-icon">🐋</div>
+                    <h3>Walrus Storage</h3>
+                    <p>Petabyte-scale storage at a fraction of AWS S3 costs. Reliable, decentralized, and permanent.</p>
+                </div>
+                <div class="bento-card glass card-hover-effect">
+                    <div class="card-icon">🔐</div>
+                    <h3>Encrypted Streams</h3>
+                    <p>Token-gated access control powered by Sui smart contracts. Viewers pay, you get paid instantly.
+                    </p>
+                </div>
+                <div class="bento-card glass card-hover-effect">
+                    <div class="card-icon">🛠️</div>
+                    <h3>Developer First SDK</h3>
+                    <p>Upload video in 3 lines of code. Automatic chunking, manifest generation, and on-chain
+                        registration.</p>
+                    <code class="code-snippet">npm install @tai-network/sdk</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ecosystem/Products Showcase -->
+    <section id="ecosystem" class="section padding-xl">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="title-lg">Built on Tai</h2>
+                <p class="subtitle">Real-world applications powering the decentralized web.</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- Tai Live -->
+                <div class="bento-card glass card-hover-effect">
+                    <div class="card-icon"
+                        style="background: linear-gradient(135deg, #ff0050, #990033); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        🔴</div>
+                    <h3>Tai Live</h3>
+                    <p>The decentralized streaming platform. Broadcast to thousands without censorship. Powered by Tai
+                        Nodes.</p>
+                    <a href="http://localhost:3002" class="btn btn-secondary"
+                        style="margin-top: auto; justify-content: center;">Launch App</a>
+                </div>
+
+                <!-- Tai Meet -->
+                <div class="bento-card glass card-hover-effect">
+                    <div class="card-icon"
+                        style="background: linear-gradient(135deg, #00f2ea, #009999); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        📞</div>
+                    <h3>Tai Meet</h3>
+                    <p>P2P Video Conferencing with zero server costs. Private, encrypted, and unstoppable.</p>
+                    <a href="#" class="btn btn-secondary" style="margin-top: auto; justify-content: center;">Coming
+                        Soon</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container center-footer">
+            <div class="footer-brand-centered">
+                <img src="assets/Tai_logo.png" alt="Tai Network" class="footer-logo">
+                <h3>Tai Network</h3>
+            </div>
+
+            <div class="footer-nav-centered">
+                <a href="demo.html">Live Demo</a>
+                <a href="download.html">Download Node</a>
+                <a href="#">Documentation</a>
+                <a href="#">GitHub</a>
+                <a href="#">Twitter</a>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Tai Network. Built on Walrus & Sui.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

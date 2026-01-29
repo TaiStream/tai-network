@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Tai Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body class="dark-theme">
+    <canvas id="bg-canvas"></canvas>
+
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/Tai_logo.png" alt="Tai Logo" class="logo-img">
+                <span class="logo-text">Tai<span class="highlight">Network</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="demo.html">Live Demo</a>
+                <a href="download.html" class="nav-item-active">Download</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container full-height" style="flex-direction: column; padding-top: 80px;">
+        <div class="section-header center">
+            <h1 class="hero-title">Start Building</h1>
+            <p class="hero-desc">Everything you need to run a node or build a dApp.</p>
+        </div>
+
+        <div class="bento-grid" style="width: 100%;">
+            <!-- Node CLI -->
+            <div class="bento-card glass span-2">
+                <div class="card-icon">🖥️</div>
+                <h3>Tai Node CLI</h3>
+                <p style="margin-bottom: 1.5rem;">The reference implementation for the Delivery Node. Check out the repo
+                    and run your own CDN.</p>
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <code style="color: var(--primary);">git clone https://github.com/tai-network/node.git</code><br>
+                    <code style="color: var(--text-muted);">npm install && npm start</code>
+                </div>
+                <a href="#" class="btn btn-primary glow">View on GitHub</a>
+            </div>
+
+            <!-- SDK -->
+            <div class="bento-card glass">
+                <div class="card-icon">📦</div>
+                <h3>Tai SDK</h3>
+                <p style="margin-bottom: 1.5rem;">The Javascript client for ingestion and playback.</p>
+                <code
+                    style="display:block; padding: 1rem; background:rgba(0,0,0,0.3); border-radius:8px; margin-bottom: 1.5rem; color:var(--accent);">npm i @tai-network/sdk</code>
+                <a href="#" class="btn btn-secondary" style="width: 100%; justify-content: center;">Read Docs</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

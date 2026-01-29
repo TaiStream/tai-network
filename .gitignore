@@ -1,0 +1,15 @@
+# Misc
+.DS_Store
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+
+# Build artifacts (if any bundler is added)
+dist/
+build/
+node_modules/

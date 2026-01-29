@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tai Network Live Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="dark-theme">
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/Tai_logo.png" alt="Tai Logo" class="logo-img">
+                <span class="logo-text">Tai<span class="highlight">Network</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Back to Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container full-height" style="flex-direction: column; padding-top: 80px;">
+        <div class="section-header center">
+            <h1 class="hero-title" style="font-size: 3rem;">Try the Infrastructure</h1>
+            <p class="hero-desc">Upload a video to Walrus Testnet and stream it back via Tai Node.</p>
+        </div>
+
+        <!-- Demo Interface -->
+        <div class="demo-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%;">
+
+            <!-- Uploader -->
+            <div class="glass" style="padding: 2rem; border-radius: 20px;">
+                <h3>1. Ingestion</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Client-side Chunking & Upload</p>
+
+                <div id="upload-zone" class="upload-zone">
+                    <input type="file" id="file-input" accept="video/mp4,video/webm" hidden>
+                    <div class="upload-content">
+                        <div style="font-size: 3rem;">📤</div>
+                        <p class="upload-text">Drag video here or click to browse</p>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div id="logs"
+                    style="margin-top: 1rem; font-family: monospace; font-size: 0.8rem; height: 150px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                    <div style="color: var(--text-muted);">System Ready. Waiting for file...</div>
+                </div>
+            </div>
+
+            <!-- Player -->
+            <div class="glass" style="padding: 2rem; border-radius: 20px;">
+                <h3>2. Delivery</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Stream via Tai Node (localhost:3001)</p>
+
+                <div id="player-container"
+                    style="background: #000; aspect-ratio: 16/9; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow:hidden;">
+                    <p style="color: var(--text-muted);">Waiting for manifest...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline Script for Demo Logic -->
+    <script type="module">
+        const WALRUS_PUBLISHER = 'https://publisher.walrus-testnet.walrus.space';
+        const CHUNK_SIZE = 10 * 1024 * 1024;
+        const NODE_URL = 'http://localhost:3001';
+
+        const logs = document.getElementById('logs');
+        function log(msg) {
+            const div = document.createElement('div');
+            div.textContent = `> ${msg}`;
+            logs.appendChild(div);
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        async function uploadToWalrus(blob) {
+            const res = await fetch(`${WALRUS_PUBLISHER}/v1/blobs?epochs=5`, {
+                method: 'PUT',
+                body: blob
+            });
+            if (!res.ok) throw new Error('Upload Failed');
+            const data = await res.json();
+            return data.newlyCreated?.blobObject?.blobId || data.alreadyCertified?.blobObject?.blobId;
+        }
+
+        // Handle File Logic
+        const input = document.getElementById('file-input');
+        const zone = document.getElementById('upload-zone');
+
+        zone.addEventListener('click', () => input.click());
+        input.addEventListener('change', () => processFile(input.files[0]));
+
+        async function processFile(file) {
+            if (!file) return;
+            log(`Processing: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+
+            const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+            const chunks = [];
+
+            try {
+                // 1. Upload Chunks
+                for (let i = 0; i < totalChunks; i++) {
+                    log(`Uploading Chunk ${i + 1}/${totalChunks}...`);
+                    const start = i * CHUNK_SIZE;
+                    const end = Math.min(start + CHUNK_SIZE, file.size);
+                    const chunkBlob = file.slice(start, end);
+
+                    const blobId = await uploadToWalrus(chunkBlob);
+                    chunks.push({ index: i, blobId, offsetStart: start, offsetEnd: end, size: chunkBlob.size });
+                    log(`✅ Chunk ${i + 1} ID: ${blobId.slice(0, 8)}...`);
+
+                    document.querySelector('.progress-fill').style.width = `${((i + 1) / totalChunks) * 90}%`;
+                }
+
+                // 2. Create Manifest
+                log('Creating Manifest...');
+                const manifest = {
+                    version: '1.0',
+                    title: file.name,
+                    mimeType: file.type,
+                    totalSize: file.size,
+                    chunks: chunks,
+                    createdAt: Date.now()
+                };
+
+                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+                const manifestId = await uploadToWalrus(manifestBlob);
+                log(`🎉 Manifest Created: ${manifestId}`);
+                document.querySelector('.progress-fill').style.width = `100%`;
+
+                // 3. Play
+                playVideo(manifestId);
+
+            } catch (err) {
+                log(`❌ Error: ${err.message}`);
+                console.error(err);
+            }
+        }
+
+        function playVideo(manifestId) {
+            const container = document.getElementById('player-container');
+            container.innerHTML = '';
+
+            const video = document.createElement('video');
+            video.controls = true;
+            video.autoplay = true;
+            video.style.width = '100%';
+
+            // Point to Local Tai Node
+            const streamUrl = `${NODE_URL}/stream/${manifestId}`;
+            log(`Streaming from: ${streamUrl}`);
+
+            video.src = streamUrl;
+            container.appendChild(video);
+        }
+    </script>
+</body>
+
+</html>
