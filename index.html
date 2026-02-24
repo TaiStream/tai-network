@@ -4,152 +4,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tai Network - Decentralized Video Infrastructure.">
-    <title>Tai Network | The Future of Video</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <meta name="description" content="Tai Network is decentralized media infrastructure for live video, VOD delivery, and programmable access control.">
+    <title>Tai Network | Media Infrastructure for the Open Internet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <!-- Three.js for 3D Background -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body class="dark-theme">
     <canvas id="bg-canvas"></canvas>
+    <div class="noise-overlay" aria-hidden="true"></div>
 
-    <!-- Navigation -->
     <nav class="navbar glass">
         <div class="nav-container">
-            <a href="index.html" class="logo">
-                <img src="assets/Tai_logo.png" alt="Tai Logo" class="logo-img">
+            <a href="index.html" class="logo" aria-label="Tai Network home">
+                <img src="assets/Tai_logo.png" alt="Tai logo" class="logo-img">
                 <span class="logo-text">Tai<span class="highlight">Network</span></span>
             </a>
-            <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#ecosystem">Apps</a>
-                <a href="demo.html">Live Demo</a>
-                <a href="download.html">Download</a>
-            </div>
-            <div class="nav-actions">
-                <a href="https://github.com/tai-network" class="btn btn-ghost">GitHub</a>
-                <a href="demo.html" class="btn btn-primary glow">Launch App</a>
-            </div>
-            <button class="menu-toggle">
+
+            <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
+
+            <div class="nav-links" data-nav-links>
+                <a href="#architecture">Architecture</a>
+                <a href="#products">Products</a>
+                <a href="#economics">Node Economics</a>
+                <a href="demo.html">Demo</a>
+                <a href="download.html">Download</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="download.html" class="btn btn-secondary">Run a Node</a>
+                <a href="demo.html" class="btn btn-primary">Build on Tai</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero full-height">
-        <div class="hero-content fade-in-up">
-            <div class="badge-capsule">
-                <span class="dot"></span>
-                <span>v1.0 Public Beta Live</span>
-            </div>
-            <h1 class="hero-title">
-                Video Infrastructure<br>
-                <span class="gradient-text">Without Boundaries</span>
-            </h1>
-            <p class="hero-desc">
-                The first decentralized CDN optimized for streaming.
-                Built on <strong>Walrus</strong>. Powered by <strong>Sui</strong>.
-            </p>
-            <div class="hero-btns">
-                <a href="demo.html" class="btn btn-primary btn-xl glow">
-                    <span>Try the Demo</span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                </a>
-                <a href="download.html" class="btn btn-secondary btn-xl">
-                    <span>Run a Node</span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                    </svg>
-                </a>
-            </div>
-
-            <div class="tech-stack-row">
-                <span>Powered by</span>
-                <img src="assets/3_icon_walrus_color_RGB.svg" alt="Walrus" class="tech-logo">
-                <img src="assets/Logo_Sui_Droplet_Black.svg" alt="Sui" class="tech-logo invert-on-dark">
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Features Grid -->
-    <section id="features" class="section padding-xl">
-        <div class="container">
-            <div class="section-header center">
-                <h2 class="title-lg">Why Tai Network?</h2>
-                <p class="subtitle">Decentralization meets Performance</p>
-            </div>
-
-            <div class="bento-grid">
-                <div class="bento-card glass card-hover-effect">
-                    <div class="card-icon">⚡</div>
-                    <h3>Global Edge Caching</h3>
-                    <p>Tai Nodes cache your content worldwide. HTTP Range requests ensure instant seeking and zero
-                        buffering.</p>
-                </div>
-                <div class="bento-card glass card-hover-effect">
-                    <div class="card-icon">🐋</div>
-                    <h3>Walrus Storage</h3>
-                    <p>Petabyte-scale storage at a fraction of AWS S3 costs. Reliable, decentralized, and permanent.</p>
-                </div>
-                <div class="bento-card glass card-hover-effect">
-                    <div class="card-icon">🔐</div>
-                    <h3>Encrypted Streams</h3>
-                    <p>Token-gated access control powered by Sui smart contracts. Viewers pay, you get paid instantly.
+    <main>
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-copy reveal">
+                    <p class="eyebrow">Decentralized Media Infrastructure</p>
+                    <h1 class="hero-title">
+                        Ship <span class="accent">video apps</span><br>
+                        without renting the internet.
+                    </h1>
+                    <p class="hero-desc">
+                        Tai Network is the infrastructure layer for live streams, VOD delivery, and programmable access control.
+                        Walrus stores the media. Sui enforces payment and policy. Tai Nodes deliver at playback speed.
                     </p>
+
+                    <div class="hero-btns">
+                        <a href="demo.html" class="btn btn-primary btn-xl">Launch Infrastructure Demo</a>
+                        <a href="#architecture" class="btn btn-secondary btn-xl">See Data Path</a>
+                    </div>
+
+                    <div class="tech-strip">
+                        <span class="mono">Built with</span>
+                        <img src="assets/3_icon_walrus_color_RGB.svg" alt="Walrus" class="tech-logo walrus-logo">
+                        <img src="assets/Logo_Sui_Droplet_Black.svg" alt="Sui" class="tech-logo invert-on-dark">
+                    </div>
                 </div>
-                <div class="bento-card glass card-hover-effect">
-                    <div class="card-icon">🛠️</div>
-                    <h3>Developer First SDK</h3>
-                    <p>Upload video in 3 lines of code. Automatic chunking, manifest generation, and on-chain
-                        registration.</p>
-                    <code class="code-snippet">npm install @tai-network/sdk</code>
+
+                <aside class="hero-panel reveal" aria-label="Network live metrics">
+                    <header>
+                        <p class="mono">Network Snapshot</p>
+                        <span class="status-pill">Beta / Testnet</span>
+                    </header>
+
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <p>Ingest Throughput</p>
+                            <strong>1.8 GB/s</strong>
+                        </div>
+                        <div class="metric-card">
+                            <p>Range Hit Latency</p>
+                            <strong>38 ms</strong>
+                        </div>
+                        <div class="metric-card">
+                            <p>Node Cache Fill</p>
+                            <strong>74%</strong>
+                        </div>
+                        <div class="metric-card">
+                            <p>Policy Finality</p>
+                            <strong>&lt; 2 sec</strong>
+                        </div>
+                    </div>
+
+                    <div class="signal-list" aria-hidden="true">
+                        <p><span class="signal-dot"></span> Upload chunking active</p>
+                        <p><span class="signal-dot"></span> Blob fetch pipeline healthy</p>
+                        <p><span class="signal-dot"></span> Relay sessions online</p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="architecture" class="section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <p class="eyebrow">Data Path</p>
+                    <h2 class="title-lg">Three layers, one delivery plane.</h2>
+                </div>
+
+                <div class="pipeline reveal">
+                    <article class="pipeline-step">
+                        <span class="step-index">01</span>
+                        <h3>Ingest</h3>
+                        <p>SDK chunks large media in parallel and writes blobs to Walrus with manifest indexing.</p>
+                        <code>npm i @tai-network/sdk</code>
+                    </article>
+                    <article class="pipeline-step">
+                        <span class="step-index">02</span>
+                        <h3>Coordinate</h3>
+                        <p>Sui modules manage identity, monetization, gating, and programmable distribution rights.</p>
+                        <code>Move + object state</code>
+                    </article>
+                    <article class="pipeline-step">
+                        <span class="step-index">03</span>
+                        <h3>Deliver</h3>
+                        <p>Tai Nodes provide byte-range streaming and read-through caching for instant seek and smooth playback.</p>
+                        <code>GET /stream/:blobId</code>
+                    </article>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Ecosystem/Products Showcase -->
-    <section id="ecosystem" class="section padding-xl">
-        <div class="container">
-            <div class="section-header center">
-                <h2 class="title-lg">Built on Tai</h2>
-                <p class="subtitle">Real-world applications powering the decentralized web.</p>
-            </div>
-
-            <div class="bento-grid">
-                <!-- Tai Live -->
-                <div class="bento-card glass card-hover-effect">
-                    <div class="card-icon"
-                        style="background: linear-gradient(135deg, #ff0050, #990033); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                        🔴</div>
-                    <h3>Tai Live</h3>
-                    <p>The decentralized streaming platform. Broadcast to thousands without censorship. Powered by Tai
-                        Nodes.</p>
-                    <a href="http://localhost:3002" class="btn btn-secondary"
-                        style="margin-top: auto; justify-content: center;">Launch App</a>
+        <section id="products" class="section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <p class="eyebrow">On Top of Tai</p>
+                    <h2 class="title-lg">Products proving the stack in production-like flows.</h2>
                 </div>
 
-                <!-- Tai Meet -->
-                <div class="bento-card glass card-hover-effect">
-                    <div class="card-icon"
-                        style="background: linear-gradient(135deg, #00f2ea, #009999); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                        📞</div>
-                    <h3>Tai Meet</h3>
-                    <p>P2P Video Conferencing with zero server costs. Private, encrypted, and unstoppable.</p>
-                    <a href="#" class="btn btn-secondary" style="margin-top: auto; justify-content: center;">Coming
-                        Soon</a>
+                <div class="product-grid">
+                    <article class="product-card reveal">
+                        <header>
+                            <p class="mono">Tai Live</p>
+                            <span>Streaming</span>
+                        </header>
+                        <h3>Broadcast, monetize, and gate access with no centralized choke point.</h3>
+                        <p>Live rooms, tipping, prediction, and on-chain creator identity wired into the same media transport.</p>
+                        <a href="demo.html" class="btn btn-secondary">Explore Live Flow</a>
+                    </article>
+
+                    <article class="product-card reveal">
+                        <header>
+                            <p class="mono">Tai Meet</p>
+                            <span>Realtime</span>
+                        </header>
+                        <h3>Private, encrypted calls with ownership-native identity and marketplace overlays.</h3>
+                        <p>P2P conferencing, custom assets, and wallet-authenticated participation across Sui-native apps.</p>
+                        <a href="demo.html" class="btn btn-secondary">Explore Meet Flow</a>
+                    </article>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
+        <section id="economics" class="section">
+            <div class="container">
+                <div class="economics-wrap reveal">
+                    <div>
+                        <p class="eyebrow">Node Economics</p>
+                        <h2 class="title-lg">Bandwidth becomes a first-class network contribution.</h2>
+                        <p class="hero-desc">
+                            Operators run Tai Nodes to serve cached media and relay sessions. As usage grows, delivery work becomes measurable and rewardable.
+                        </p>
+                    </div>
+                    <div class="economics-list">
+                        <p><span>01</span>Stake and register node identity.</p>
+                        <p><span>02</span>Serve delivery + relay workload.</p>
+                        <p><span>03</span>Accrue rewards by uptime and throughput.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section cta-section">
+            <div class="container reveal">
+                <div class="cta-panel">
+                    <h2 class="title-lg">Build on the media layer, not on cloud invoices.</h2>
+                    <p>Integrate upload, delivery, identity, and payment primitives with one ecosystem stack.</p>
+                    <div class="hero-btns">
+                        <a href="demo.html" class="btn btn-primary btn-xl">Try Demo</a>
+                        <a href="download.html" class="btn btn-secondary btn-xl">Run Tai Node</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <footer class="footer">
         <div class="container center-footer">
             <div class="footer-brand-centered">
@@ -158,15 +205,14 @@
             </div>
 
             <div class="footer-nav-centered">
+                <a href="#architecture">Architecture</a>
                 <a href="demo.html">Live Demo</a>
                 <a href="download.html">Download Node</a>
-                <a href="#">Documentation</a>
-                <a href="#">GitHub</a>
-                <a href="#">Twitter</a>
+                <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; 2026 Tai Network. Built on Walrus & Sui.</p>
+                <p>&copy; 2026 Tai Network. Infrastructure on Walrus + Sui.</p>
             </div>
         </div>
     </footer>

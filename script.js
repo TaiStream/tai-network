@@ -1,88 +1,57 @@
-// Tai Network Interactive Scripts
-
-// 1. Three.js Background Animation
 function initBackground() {
     const canvas = document.getElementById('bg-canvas');
-    if (!canvas) return;
+    if (!canvas || typeof THREE === 'undefined') return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+    const camera = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Particles (Nodes)
+    const points = 340;
     const geometry = new THREE.BufferGeometry();
-    const particlesCount = 700;
-    const posArray = new Float32Array(particlesCount * 3);
+    const pos = new Float32Array(points * 3);
 
-    for (let i = 0; i < particlesCount * 3; i++) {
-        // Random positions spread out
-        posArray[i] = (Math.random() - 0.5) * 25;
+    for (let i = 0; i < points; i++) {
+        const i3 = i * 3;
+        pos[i3] = (Math.random() - 0.5) * 22;
+        pos[i3 + 1] = (Math.random() - 0.5) * 16;
+        pos[i3 + 2] = (Math.random() - 0.5) * 16;
     }
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
 
-    // Material
     const material = new THREE.PointsMaterial({
-        size: 0.05,
-        color: 0x00f2ea,
+        size: 0.06,
+        color: 0x6fdcff,
         transparent: true,
         opacity: 0.8,
     });
 
-    // Mesh
-    const particlesMesh = new THREE.Points(geometry, material);
-    scene.add(particlesMesh);
+    const cloud = new THREE.Points(geometry, material);
+    scene.add(cloud);
+    camera.position.z = 7;
 
-    // Lines connecting nearby particles (The "Network" effect)
-    // - Doing this properly in raw Three.js is heavy on CPU. 
-    // - We'll use a simpler "Fog" rotation for visual effect instead of per-frame connectivity calculation for performance.
+    let mx = 0;
+    let my = 0;
 
-    camera.position.z = 5;
-
-    // Mouse Interaction
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
-
-    document.addEventListener('mousemove', (event) => {
-        mouseX = (event.clientX - windowHalfX);
-        mouseY = (event.clientY - windowHalfY);
+    window.addEventListener('mousemove', (event) => {
+        mx = (event.clientX / window.innerWidth - 0.5) * 0.35;
+        my = (event.clientY / window.innerHeight - 0.5) * 0.35;
     });
 
-    const clock = new THREE.Clock();
-
     function animate() {
-        targetX = mouseX * 0.001;
-        targetY = mouseY * 0.001;
-
-        const elapsedTime = clock.getElapsedTime();
-
-        // Rotate entire constellation slowly
-        particlesMesh.rotation.y += 0.002;
-        particlesMesh.rotation.x += 0.001;
-
-        // Mouse influence easing
-        particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
-        particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
-
-        // Wave effect
-        // Animate individual positions if we had shader material, 
-        // but for MVP just general rotation looks "space-like" and modern.
-
+        cloud.rotation.y += 0.0009;
+        cloud.rotation.x += 0.00045;
+        cloud.rotation.y += (mx - cloud.rotation.y) * 0.018;
+        cloud.rotation.x += (my - cloud.rotation.x) * 0.018;
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
     }
 
     animate();
 
-    // Resize Handler
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -90,67 +59,100 @@ function initBackground() {
     });
 }
 
-// 2. Demo Page Logic (File Upload)
-document.addEventListener('DOMContentLoaded', () => {
-    initBackground();
+function initReveal() {
+    const nodes = document.querySelectorAll('.reveal');
+    if (!nodes.length) return;
 
+    const obs = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
+            }
+        }
+    }, { threshold: 0.12 });
+
+    nodes.forEach((node, i) => {
+        node.style.transitionDelay = `${Math.min(i * 70, 420)}ms`;
+        obs.observe(node);
+    });
+}
+
+function initMobileMenu() {
+    const toggle = document.querySelector('.menu-toggle');
+    const links = document.querySelector('[data-nav-links]');
+    if (!toggle || !links) return;
+
+    toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        links.classList.toggle('is-open');
+    });
+
+    links.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+            links.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+        });
+    });
+}
+
+function initDemoUploadInteractions() {
     const uploadZone = document.getElementById('upload-zone');
     const fileInput = document.getElementById('file-input');
 
-    if (uploadZone && fileInput) {
-        uploadZone.addEventListener('click', () => fileInput.click());
+    if (!uploadZone || !fileInput) return;
 
-        uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadZone.classList.add('dragover');
-        });
+    uploadZone.addEventListener('click', () => fileInput.click());
 
-        uploadZone.addEventListener('dragleave', () => {
-            uploadZone.classList.remove('dragover');
-        });
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
 
-        uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadZone.classList.remove('dragover');
-            if (e.dataTransfer.files.length) {
-                handleFiles(e.dataTransfer.files);
-            }
-        });
+    uploadZone.addEventListener('dragleave', () => {
+        uploadZone.classList.remove('dragover');
+    });
 
-        fileInput.addEventListener('change', (e) => {
-            if (fileInput.files.length) {
-                handleFiles(fileInput.files);
-            }
-        });
-    }
-});
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            handleFiles(e.dataTransfer.files);
+        }
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFiles(fileInput.files);
+        }
+    });
+}
 
 async function handleFiles(files) {
     const file = files[0];
     if (!file) return;
 
-    // UI Updates
-    document.querySelector('.upload-text').textContent = `Processing: ${file.name}`;
-    document.querySelector('.progress-bar').style.display = 'block';
+    const uploadText = document.querySelector('.upload-text');
+    const progressBar = document.querySelector('.progress-bar');
     const fill = document.querySelector('.progress-fill');
 
-    // MOCK UPLOAD for Demo Visuals (Real SDK logic is in separate module)
-    // We visually simulate the chunking/uploading to show the "Experience"
-    // In demo.html, we will try to actually call the backend if available.
+    if (!uploadText || !progressBar || !fill) return;
 
-    // Simulate progress
+    uploadText.textContent = `Processing: ${file.name}`;
+    progressBar.style.display = 'block';
+
     for (let i = 0; i <= 100; i += 5) {
         fill.style.width = `${i}%`;
-        await new Promise(r => setTimeout(r, 100)); // fast visual feedback
+        await new Promise((resolve) => setTimeout(resolve, 90));
     }
 
-    // Trigger success state
-    document.querySelector('.upload-text').innerHTML = `✅ Uploaded! <br> <span style="font-size:0.8em; opacity:0.7">Manifest ID: generated_on_walrus...</span>`;
-
-    // Show Player (Mockup for landing animation, but in demo.html it will be real)
-    const playerContainer = document.getElementById('demo-player');
-    if (playerContainer) {
-        playerContainer.style.display = 'block';
-        playerContainer.scrollIntoView({ behavior: 'smooth' });
-    }
+    uploadText.innerHTML = 'Upload simulation complete';
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    initBackground();
+    initReveal();
+    initMobileMenu();
+    initDemoUploadInteractions();
+});
